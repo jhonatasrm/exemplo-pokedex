@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Pokédex</string>
+    <string name="loading">Loading ...</string>
+    <string name="types">Types</string>
+    <string name="abilities">Abilities</string>
+    <string name="description">Description</string>
+    <string name="moves">Combo Moves</string>
+    <string name="moves_pokemon">Moves</string>
+</resources>
