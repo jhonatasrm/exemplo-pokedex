@@ -24,13 +24,12 @@ import java.util.List;
 public class DetailsClass extends AppCompatActivity {
 
     String pokemon;
-    TextView pokemonName, ability, type, comboMoves, movesText;
+    TextView pokemonName, ability, type;
     WebView description;
     ImageView pokemonImage;
     Spinner movesPokemon;
     LinearLayout linearLayout, linearLayoutProgress;
-    String typesText, abilitiesText, getImage, textDescription, arrayCombo, getURL, arrayComboText, movesPokemonText;
-    int id;
+    String typesText, abilitiesText, getImage, textDescription, getURL, movesPokemonText;
     boolean check = false;
 
     @Override
@@ -105,6 +104,7 @@ public class DetailsClass extends AppCompatActivity {
                                 .getAsJsonObject("species")
                                 .get("url")
                                 .getAsString();
+
                         // pega URL para descrição
                         description(getURL);
 
@@ -125,19 +125,15 @@ public class DetailsClass extends AppCompatActivity {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(DetailsClass.this, android.R.layout.simple_spinner_item, spinnerArray);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         movesPokemon.setAdapter(adapter);
-
-                        // pegar id
-                        id = result.get("id").getAsInt();
-                        moves(id);
                     }
                 });
     }
 
+    // pegar a descrição do pokémon utilizando o link obtido da URL anterior
     public void description(String link) {
 
-//        final TextView tvdescricao = findViewById(R.id.descricoes);
         Ion.with(this)
-                .load(link)// pega todos os poquemons
+                .load(link)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -181,42 +177,7 @@ public class DetailsClass extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    public void moves(int idReceived) {
-        Ion.with(this)
-                .load("https://pokeapi.co/api/v2/move/" + idReceived + "/")
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        arrayComboText = "  ";
-
-                        try {
-                            JsonArray arrayCombos = result.getAsJsonObject("contest_combos")
-                                    .getAsJsonObject("normal")
-                                    .getAsJsonArray("use_after");
-
-                            for (int i = 0; i < arrayCombos.size(); i++) {
-
-                                arrayCombo = arrayCombos
-                                        .get(i)
-                                        .getAsJsonObject()
-                                        .get("name")
-                                        .getAsString();
-                                arrayComboText = arrayComboText + arrayCombo + "\n  ";
-
-                            }
-                            comboMoves.setText(arrayComboText);
-
-                        } catch (Exception error) {
-                            error.printStackTrace();
-                            movesText.setVisibility(View.INVISIBLE);
-                            comboMoves.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                });
-
+        // Thread para garantir carregamento
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -230,6 +191,7 @@ public class DetailsClass extends AppCompatActivity {
                 });
             }
         }).start();
+
     }
 
     // inicializa findViewById's
@@ -241,11 +203,10 @@ public class DetailsClass extends AppCompatActivity {
         linearLayoutProgress = findViewById(R.id.linearLayoutProgress);
         linearLayout = findViewById(R.id.linearLayout);
         description = findViewById(R.id.description);
-        comboMoves = findViewById(R.id.moves);
-        movesText = findViewById(R.id.moves_text);
         movesPokemon = findViewById(R.id.moves_pokemon);
     }
 
+    // método com animação na trasição entre activities
     @Override
     public void onBackPressed() {
         super.onBackPressed();
