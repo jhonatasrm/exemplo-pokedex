@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity {
         pokemon = findViewById(R.id.pokemon_name);
     }
 
-    // testa se o editText está vazio e emite uma mensagem, caso contrário envia pra próxima tela
+    // testa se o editText está vazio e emite uma mensagem, caso contrário envia para a próxima activity
     public void getDetails(View view) {
         editTextPokemon = pokemon.getText().toString();
-        if(TextUtils.isEmpty(editTextPokemon)){
+        if (TextUtils.isEmpty(editTextPokemon)) {
             pokemon.setError("Empty Field !");
             return;
-        }else {
+        } else {
             Intent intent = new Intent(MainActivity.this, DetailsClass.class);
             intent.putExtra("pokemon_name", String.valueOf(pokemon.getText()));
             startActivity(intent);
