@@ -5,7 +5,7 @@
 Exemplo simples de uma pokédex utilizando a API PokéAPI.
 
 ## Android Versão Mínima
-Android 4.4 KitKat (API Level 19)
+Android 5.0 (API level 21)
 
 ## Uso de seguintes recursos
 * Buscar por pokémon
