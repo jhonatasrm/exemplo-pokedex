@@ -7,12 +7,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     Button button_details;
     EditText pokemon;
     String editTextPokemon;
+    private static final int VERIFY_IF_EXISTS = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(MainActivity.this, DetailsClass.class);
             intent.putExtra("pokemon_name", String.valueOf(pokemon.getText()));
-            startActivity(intent);
-            this.finish();
+            startActivityForResult(intent, VERIFY_IF_EXISTS);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == VERIFY_IF_EXISTS){
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(MainActivity.this, "The Pokémon '"+ data.getStringExtra("notFound") +"' does not exist!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }
