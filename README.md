@@ -18,8 +18,9 @@ Android 5.0 (API level 21)
 * Uso de um ProgressBar enquanto carrega a pesquisa
 * Scrollview para ler o conteúdo caso esteja em modo paisagem ou seja extenso
 * Uso de Spinner para mostrar os movimentos do pokémon
+* Verifica se o Pokémon existe, caso não, retorna para a Activity anterior exibindo uma mensagem
 
-<img src="screenshot1.jpg" alt="screenshot" width="200" height="400"/>  <img src="screenshot2.jpg" alt="screenshot" width="200" height="400"/> <img src="screenshot3.jpg" alt="screenshot" width="200" height="400"/> <br> <img src="screenshot4.jpg" alt="screenshot" width="200" height="400"/> <img src="screenshot5.jpg" alt="screenshot" width="200" height="400"/> <br> <img src="screenshot6.jpg" alt="screenshot" width="400" height="200"/> <img src="screenshot7.jpg" alt="screenshot" width="400" height="200"/>
+<img src="exemplo-pokedex.gif" alt="screenRecord" width="200" height="400"/>
 
 ### Licença
 Este repositório está disponível sob a licença [Mozilla Public License, version 2.0](https://github.com/jhonatasrm/exemplo-pokedex/blob/master/LICENSE)
