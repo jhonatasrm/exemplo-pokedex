@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -30,6 +29,7 @@ public class DetailsClass extends AppCompatActivity {
     Spinner movesPokemon;
     LinearLayout linearLayout, linearLayoutProgress;
     String typesText, abilitiesText, getImage, textDescription, getURL, movesPokemonText;
+    JsonArray arrayTypes;
     boolean check = false;
 
     @Override
@@ -47,9 +47,11 @@ public class DetailsClass extends AppCompatActivity {
     }
 
     public void initAPIPokedex(String pokemon) {
-
         // remove espaços em branco na String
         pokemon = pokemon.replaceAll("\\s+", "");
+
+        // se não existe é enviado para a MainActivity
+        final String notFound = pokemon;
 
         Ion.with(this)
                 .load("https://pokeapi.co/api/v2/pokemon/" + pokemon.toLowerCase() + "/")
@@ -60,8 +62,20 @@ public class DetailsClass extends AppCompatActivity {
                         typesText = "     ";
                         abilitiesText = " ";
 
-                        // array de tipos
-                        JsonArray arrayTypes = result.getAsJsonArray("types");
+                        try {
+                            // array de tipos
+                            arrayTypes = result.getAsJsonArray("types");
+                        }catch (Exception error){
+                            Intent pokemonNotFound = new Intent(DetailsClass.this, MainActivity.class);
+                            pokemonNotFound.putExtra("notFound", notFound);
+                            setResult(RESULT_OK, pokemonNotFound);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+                            finish();
+                        }
+
+                        if(arrayTypes == null){
+                            return;
+                        }
 
                         for (int i = 0; i < arrayTypes.size(); i++) {
                             String types = result
