@@ -23,13 +23,13 @@ import java.util.List;
 public class DetailsClass extends AppCompatActivity {
 
     String pokemon;
-    TextView pokemonName, ability, type;
-    WebView description;
+    TextView pokemonName, ability, type, ability1, ability2;
+    WebView description, descriptionAbility1, descriptionAbility2;
     ImageView pokemonImage;
     Spinner movesPokemon;
     LinearLayout linearLayout, linearLayoutProgress;
-    String typesText, abilitiesText, getImage, textDescription, getURL, movesPokemonText;
-    JsonArray arrayTypes;
+    String typesText, abilitiesText, getImage, textDescription, getURL, movesPokemonText, textDescriptionAbility;
+    JsonArray arrayTypes, positionAbilities;
     boolean check = false;
 
     @Override
@@ -89,7 +89,9 @@ public class DetailsClass extends AppCompatActivity {
                             typesText = typesText + types + "\n     ";
                         }
 
-                        for (int i = 0; i < arrayTypes.size(); i++) {
+                        // salva o Array abilities para comparar no laço for até chegar a seu tamanho
+                        positionAbilities = result.getAsJsonArray("abilities");
+                        for (int i = 0; i < positionAbilities.size(); i++) {
                             String abilities = result
                                     .getAsJsonArray("abilities")
                                     .get(i)
@@ -99,9 +101,32 @@ public class DetailsClass extends AppCompatActivity {
                                     .getAsString();
 
                             abilitiesText = abilitiesText + abilities + "\n ";
+
+                            // pega as habilidades
+                            if(i == 0){
+                                ability1.setText(abilities);
+                            }
+                            if(i == 1){
+                                // na posição 1 do Array deixamos o TextView ability2 visivel
+                                ability2.setVisibility(View.VISIBLE);
+                                ability2.setText(abilities);
+                            }
                         }
                         ability.setText(abilitiesText);
                         type.setText(typesText);
+
+                        for (int i = 0; i < positionAbilities.size(); i++) {
+                            String abilitiesURL = result
+                                    .getAsJsonArray("abilities")
+                                    .get(i)
+                                    .getAsJsonObject()
+                                    .getAsJsonObject("ability")
+                                    .get("url")
+                                    .getAsString();
+
+                            // envia a URL e a posição da habilidade
+                            getAbilitiesDescription(abilitiesURL, i);
+                        }
 
                         // Pegar a imagem
                         getImage = result
@@ -208,6 +233,78 @@ public class DetailsClass extends AppCompatActivity {
 
     }
 
+    public void getAbilitiesDescription(String abilityURL, final int position){
+        Ion.with(this)
+                .load(abilityURL)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        JsonArray arraylinguagem = result.getAsJsonArray("flavor_text_entries");
+                        for (int i = 0; i < arraylinguagem.size(); i++) {
+
+                            String language = arraylinguagem
+                                    .get(i)
+                                    .getAsJsonObject()
+                                    .get("language")
+                                    .getAsJsonObject()
+                                    .get("name")
+                                    .getAsString();
+
+                            if (language.equals("en")) {
+                                textDescriptionAbility = arraylinguagem
+                                        .get(i)
+                                        .getAsJsonObject()
+                                        .get("flavor_text")
+                                        .getAsString();
+                                check = true;
+
+                                // justifica o texto dentro do WebView descriptionAbility1 e descriptionAbility2
+                                String text;
+                                text = "<html><body><p align=\"justify\">";
+                                text += textDescriptionAbility;
+                                text += "</p></body></html>";
+
+                                // verifica a posição passada
+                                if(position == 0) {
+                                    descriptionAbility1.loadData(text, "text/html", "utf-8");
+                                }
+                                if(position == 1){
+                                    // na posição 1 do Array deixamos o TextView descriptionAbility2 visivel
+                                    descriptionAbility2.setVisibility(View.VISIBLE);
+                                    descriptionAbility2.loadData(text, "text/html", "utf-8");
+                                }
+                            }
+                        }
+
+                        if (check == false) {
+                            String text;
+                            text = "<html><body><p align=\"justify\">";
+                            text += textDescriptionAbility;
+                            text += "</p></body></html>";
+                            description.loadData(text, "text/html", "utf-8");
+                        }
+                    }
+                });
+
+        // Thread para garantir carregamento
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SystemClock.sleep(5000);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        linearLayoutProgress.setVisibility(View.INVISIBLE);
+                        linearLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }).start();
+
+    }
+
     // inicializa findViewById's
     public void initFindViewById() {
         pokemonName = findViewById(R.id.pokemon_name);
@@ -218,6 +315,10 @@ public class DetailsClass extends AppCompatActivity {
         linearLayout = findViewById(R.id.linearLayout);
         description = findViewById(R.id.description);
         movesPokemon = findViewById(R.id.moves_pokemon);
+        descriptionAbility1 = findViewById(R.id.description_ability1);
+        descriptionAbility2 = findViewById(R.id.description_ability2);
+        ability1 = findViewById(R.id.ability1);
+        ability2 = findViewById(R.id.ability2);
     }
 
     // método com animação na trasição entre activities
