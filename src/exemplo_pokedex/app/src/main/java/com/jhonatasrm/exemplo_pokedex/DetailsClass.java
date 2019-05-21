@@ -23,8 +23,8 @@ import java.util.List;
 public class DetailsClass extends AppCompatActivity {
 
     String pokemon;
-    TextView pokemonName, ability, type, ability1, ability2;
-    WebView description, descriptionAbility1, descriptionAbility2;
+    TextView pokemonName, ability, type, ability1, ability2, ability3;
+    WebView description, descriptionAbility1, descriptionAbility2, descriptionAbility3;
     ImageView pokemonImage;
     Spinner movesPokemon;
     LinearLayout linearLayout, linearLayoutProgress;
@@ -110,6 +110,11 @@ public class DetailsClass extends AppCompatActivity {
                                 // na posição 1 do Array deixamos o TextView ability2 visivel
                                 ability2.setVisibility(View.VISIBLE);
                                 ability2.setText(abilities);
+                            }
+                            if(i == 2){
+                                // na posição 2 do Array deixamos o TextView ability3 visivel
+                                ability3.setVisibility(View.VISIBLE);
+                                ability3.setText(abilities);
                             }
                         }
                         ability.setText(abilitiesText);
@@ -275,6 +280,11 @@ public class DetailsClass extends AppCompatActivity {
                                     descriptionAbility2.setVisibility(View.VISIBLE);
                                     descriptionAbility2.loadData(text, "text/html", "utf-8");
                                 }
+                                if(position == 2){
+                                    // na posição 2 do Array deixamos o TextView descriptionAbility3 visivel
+                                    descriptionAbility3.setVisibility(View.VISIBLE);
+                                    descriptionAbility3.loadData(text, "text/html", "utf-8");
+                                }
                             }
                         }
 
@@ -317,8 +327,10 @@ public class DetailsClass extends AppCompatActivity {
         movesPokemon = findViewById(R.id.moves_pokemon);
         descriptionAbility1 = findViewById(R.id.description_ability1);
         descriptionAbility2 = findViewById(R.id.description_ability2);
+        descriptionAbility3 = findViewById(R.id.description_ability3);
         ability1 = findViewById(R.id.ability1);
         ability2 = findViewById(R.id.ability2);
+        ability3 = findViewById(R.id.ability3);
     }
 
     // método com animação na trasição entre activities
